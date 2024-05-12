@@ -1,0 +1,317 @@
+<=============================================2=======================================>
+++++код Лёши
+print("x y z w")
+for x in(0,1):
+    for y in (0,1):
+        for z in (0,1):
+            for w in (0,1):
+                if ((x<=y*(not(z)))+w)==0:
+                    print(x,y,z,w)
+++++код just
+from itertools import *
+def f(x, y, w,  z):
+    return ((x <= y and (not(z))) or w) #впеисываем функцию 
+for a1, a2, a3, a4, a5, a6 in product ([0,1], repeat=6): # количество а и репеат это количество пропущенных клеток
+    table = [(a1, a2, 1, 0), (0, a3, a4, 1), (1, a5, 1, a6)]
+    if len(table) == len(set(table)):
+        for p in permutations ('xywz'):
+            if [f(**dict(zip(p,r))) for r in table] == [0,0,0]: # нули это значения F
+                print(*p, sep='')
+<=============================================3=======================================>
+from sympy import Symbol, simplify, And, Or, Not, Implies, Equivalent
+
+def simplify_expression(expression_str):
+  """
+  Упрощает логическое выражение.
+
+  Args:
+      expression_str: Строка, представляющая логическое выражение.
+
+  Returns:
+      Упрощенное выражение в виде строки.
+  """
+  symbols = []
+  for char in expression_str:
+    if char.isalpha():
+      symbols.append(Symbol(char))
+
+  expression = eval(expression_str, {s.name: s for s in symbols})  # преобразуем строку в выражение
+  simplified_expression = simplify(expression)
+  return str(simplified_expression)
+
+# Пример использования
+expression = "(A|B)&((A|B)>>(A&B))" #ввод выражения
+simplified = simplify_expression(expression)
+print(f"Упрощенное выражение: {simplified}")
+"""| Операция | Символ Python | Описание |
+|---|---|---|
+| И (конъюнкция) | `&` | Истинно, только если оба операнда истинны. |
+| ИЛИ (дизъюнкция) | `|` | Истинно, если хотя бы один операнд истинен. |
+| НЕ (отрицание) | `~` | Инвертирует значение операнда. |
+| Импликация (если ... то) | `>>` | Истинно, кроме случаев, когда первый операнд истинен, а второй ложен. |
+| Эквивалентность (тогда и только тогда) | `<=>` | Истинно, если оба операнда имеют одинаковое значение (истина или ложь). |"""
+#пример ввода с демки задания 3: (A|B)&((A|B)>>(A&B))
+#пример ввода задания 4 с демки: "(~y&x|~z&x|y&z)&(~(x&~z)|~z&y)" где x1=x x2=y x3=z
+<=============================================5=======================================>
+import re
+def analyze_boolean_function(initial_function, truth_table):
+  """
+  Анализирует булеву функцию и минимизирует её на основе таблицы истинности.
+
+  Args:
+      initial_function: Строка, представляющая начальную функцию.
+      truth_table: Список номеров наборов, где функция равна 1.
+
+  Returns:
+      Строка: Минимизированная функция, соответствующая таблице истинности.
+  """
+
+  def evaluate_function(function, variables):
+    """Вычисляет значение булевой функции для заданных значений переменных."""
+    for i, var in enumerate(variables):
+      exec(f"{var} = {variables[i]}")
+    return eval(function)
+
+  def minimize_function(function, variables, truth_table):
+    """Минимизирует булеву функцию с помощью карт Карно (не реализовано)."""
+    # Здесь необходимо реализовать алгоритм минимизации (Карно)
+    # ... 
+    # Пока что вернём исходную функцию без изменений
+    return function
+
+  variables = sorted(set(re.findall(r"[a-z]\d*", initial_function)))
+  
+  # Проверка на соответствие таблице истинности
+  for i in range(2*len(variables)):
+    binary_representation = format(i, f"0{len(variables)}b")
+    variable_values = [int(x) for x in binary_representation]
+    if evaluate_function(initial_function, variable_values) != (i+1 in truth_table):
+      return "Функция не соответствует таблице истинности"
+
+  # Минимизация функции
+  minimized_function = minimize_function(initial_function, variables, truth_table)
+  return minimized_function
+
+# Пример использования
+initial_function = "A*B"
+truth_table = [2, 5, 6]
+
+result = analyze_boolean_function(initial_function, truth_table)
+print(result)
+<=============================================7=======================================>
+for i in range(1,1000):
+    k=0
+    for x in range(100):
+        for y in range(100):
+            if ((2*y-x<i) or (x+2*y>50) or (2*x+y<40))==1:
+                k+=1
+    if k==10000:
+        print(i)
+        break
+    else:
+        k=0
+<=============================================8=======================================>
+for i in range(1,1000):
+    k=0
+    for x in range(100):
+        if(( x%45==0 and (not(x%15==0)))<=(not(i)))==1:
+            print(i)
+            k=1
+            break
+    if k==1:
+        break
+<=============================================10=======================================>
+for A in range(1,1000):
+    k=0
+    for x in range(100):
+        if ((x&55==0)or(x&10!=0)or(x&A!=0))==1:
+            k+=1
+    if k==100:
+        print(A)
+        break
+<=============================================12=======================================>
+++++код Лёши
+import turtle as t # Подключим модуль черепашка
+k = 20 # коэффициент для настраивания более удобного масштаба
+t.left(90)
+t.speed(5)
+for i in range(10): # пропишем алгоритм построения фигуры по условию
+    t.forward(6 * k)
+    t.right(120)
+t.up()
+t.speed(1000) # Увеличим скорость черепашки
+for x in range(-10, 15): # Алгоритм построения точек
+    for y in range(0, 20):
+        t.goto(x * k, y * k)
+        t.dot(3) # точки размером 4 пикселя
+t.done()
+++++++код PlEr
+использовать Черепаха
+опустить хвост
+алг
+нач
+нц 10 раз
+вперед(6)
+вправо(120)
+
+кц
+кон
+<=============================================13=======================================>
+использовать Чертежник
+алг
+нач
+нц 15 раз
+опустить перо
+сместиться на вектор(10,10)
+сместиться на вектор(3,-6)
+сместиться на вектор(-9,3)
+кц
+кон
+<=============================================14=======================================>
+from random import shuffle
+a = []
+for i in range (1,100):
+    for j in range (0,1000):
+        s = list('1'*i+'2'*i)  #поровну единиц и двоек
+        shuffle(s)
+        s = '0'+''.join(s)+'0' #переделываем из массива(list) в строку и добавляем нули с начала и конца
+        while not '00' in s:
+            if '011' in s:
+                s = s.replace('011','101',1)
+            else:
+                s = s.replace('01', '40', 1)
+                s = s.replace('02', '20', 1)
+                s = s.replace('0222', '1401', 1)
+        if s.count('1') == 6 and s.count('2') == 9:
+            a.append(s.count('4'))
+print(min(a))
+<=============================================15=======================================>
+def f(n, m):
+  for i in range(n):
+    if m[i][i] == 1:
+      return "NO"
+  for i in range(n):
+    for j in range(i + 1, n): #или просто поставить n
+      if m[i][j] != m[j][i]:
+        return "NO"
+
+  return "YES"
+n = int(input())
+m = []
+for i in range(n):
+  row = list(map(int, input().split()))
+  m.append(row)
+print(f(n, m))
+<=============================================16=======================================>
+n,m=map(int,input().split())
+a=[list(map(int,input().split()))for i in range(n)]
+d=[]
+for i in range(n):
+    d.append(sum(a[i]))
+print(max(d))
+print(d.index(max(d))+1)
+<=============================================17=======================================>
++++++++++PlEr
+f=open('14.txt')
+d=[]
+k=0
+for i in range(9482):
+    s=f.readline()
+    for i in s:
+        s=s.replace("XYZ", "*", 1)
+    for i in s:
+        if i=="*":
+            k+=1
+        else:
+            if k:
+                d.append(k)
+                k=0
+
+        
+print(max(d)*3)
+++++++++++Код Лёши
+f = open("C://Users//Lenovo//Downloads//14 (1).txt").readlines()
+k = mx = 0
+for h in range(len(f)):
+    for i in range(len(f[h])):
+        if f[h][i-1:i+1] in 'XYZX' and k:
+            k += 1
+        elif f[h][i] == 'X':
+            k = 1
+        else:
+            k = 0
+        mx = max(mx, k)
+print(mx)
+<=============================================19=======================================>
+++++++Лёша
+def check_trajectory(current, target, operations, inside, outside, trajectory, restrictions, a_count=0, range_a_count=0):
+    global commands_string
+    global extracted_limit
+    global extracted_left
+    global extracted_right
+    if current == target:
+        return all(x in trajectory for x in inside) and not any(x in trajectory for x in outside)
+    if current > target or current in outside:
+        return 0
+    count = 0
+    for op in operations:
+        new_value = eval(f"{current}{op}")
+        violates_restriction = False
+        for r in restrictions:
+            if op == r["command"]:
+                if r["left"] <= current < r["right"]:
+                    if a_count + 1 > r["limit"] or (op in commands_string  and range_a_count + 1 > extracted_limit):
+                        violates_restriction = True
+                        break
+                if current >= r["right"]:  # Reset only for the specific command
+                    if op in commands_string:
+                        range_a_count = 0 
+                    a_count = 0  
+        if not violates_restriction:
+            new_a_count = a_count# + (1 if op  in commands_string else 0)
+            new_range_a_count = range_a_count + (1 if op in commands_string and extracted_left <= current < extracted_right else 0)
+            count += check_trajectory(new_value, target, operations, inside, outside, 
+                                      trajectory + [new_value], restrictions, new_a_count, new_range_a_count)
+    return count
+
+# ... (rest of the program remains unchanged)
+
+# Основная программа
+n = int(input("Введи количество операций: "))
+operations = []
+print("Вводи операции по порядку в формате: +3, *2, ...")
+for i in range(n):
+    operations.append(input())
+a = int(input("Введи левую границу: "))
+b = int(input("Введи правую границу: "))
+numbers_inside = []
+n1 = int(input("Введи количество чисел по траектории: "))
+for i in range(n1):
+    numbers_inside.append(int(input()))
+numbers_outside = []
+n2 = int(input("Введи количество чисел исключающих: "))
+for i in range(n2):
+    numbers_outside.append(int(input()))
+
+has_restrictions = input("Есть ли ограничения на использование команд? (да/нет): ")
+restrictions = []
+extracted_limit=0
+extracted_left=0
+extracted_right =0
+if has_restrictions.lower() == "да":
+    num_restrictions = int(input("Введи количество ограничений: "))
+    for i in range(num_restrictions):
+        command = input(f"Введи команду для ограничения {i+1}: ")
+        limit = int(input(f"Введи допустимое количество использований команды {command}: "))
+        left = int(input(f"Введи левую границу диапазона для ограничения: "))
+        right = int(input(f"Введи правую границу диапазона для ограничения: "))
+        restrictions.append({"command": command, "limit": limit, "left": left, "right": right})
+commands_string=""
+for r in restrictions:
+    commands_string += r["command"] + " "
+if len(restrictions)!=0:
+    extracted_limit = restrictions[-1]["limit"]
+    extracted_left = restrictions[-1]["left"]
+    extracted_right = restrictions[-1]["right"]
+result = check_trajectory(a, b, operations, numbers_inside, numbers_outside, [a], restrictions)
+print("Количество программ:", result)
